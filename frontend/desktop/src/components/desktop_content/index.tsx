@@ -161,7 +161,7 @@ export default function DesktopContent(props: any) {
                   justifyContent="flex-start"
                   variant="ghost"
                   key={app.key}
-                  leftIcon={<Image src={app?.icon || '/logo.svg'} draggable={false} width="16px" height="16px"/>}
+                  leftIcon={<Image src={app?.icon || '/logo.svg'} draggable={false} width="18px" height="18px"/>}
                   onClick={(e) => handleDoubleClick(e, app)}
                 >
                   <Text fontSize="md">{app?.name || 'App'}</Text>
@@ -172,7 +172,7 @@ export default function DesktopContent(props: any) {
                   variant="ghost"
                   key={app.key}
                   aria-label={app.name}
-                  leftIcon={<Image src={app?.icon || '/logo.svg'} draggable={false} width="16px" height="16px"/>}
+                  icon={<Image src={app?.icon || '/logo.svg'} draggable={false} width="22px" height="22px"/>}
                   onClick={(e) => handleDoubleClick(e, app)}
                 />
             ))}
@@ -211,18 +211,12 @@ export default function DesktopContent(props: any) {
             </PopoverBody>
           </PopoverContent>
         </Popover>
-
-        <Button>
-          <LangSelectSimple/>
-        </Button>
       </Box>
 
       {/* Main Content */}
       <Box flex="1">
         {/* Running Apps */}
-        {runningInfo.map((process) => (
-          <IframeWindow key={process.pid} pid={process.pid}/>
-        ))}
+        {runningInfo.length > 0 && <IframeWindow pid={runningInfo[runningInfo.length - 1].pid}/>}
       </Box>
     </Flex>
   )
