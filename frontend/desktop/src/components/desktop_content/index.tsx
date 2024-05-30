@@ -1,5 +1,4 @@
 import { getGlobalNotification } from '@/api/platform'
-import AppWindow from '@/components/app_window'
 import useAppStore from '@/stores/app'
 import { useConfigStore } from '@/stores/config'
 import { TApp, WindowSize } from '@/types'
@@ -21,11 +20,17 @@ import {
 } from '@chakra-ui/react'
 import {
   FaArrowLeft,
-  FaArrowRight, FaChartBar,
-  FaClipboardList, FaCog,
-  FaDownload, FaNetworkWired, FaRocket,
-  FaSignOutAlt, FaTicketAlt,
-  FaUserCircle, FaUsers,
+  FaArrowRight,
+  FaChartBar,
+  FaClipboardList,
+  FaCog,
+  FaDownload,
+  FaNetworkWired,
+  FaRocket,
+  FaSignOutAlt,
+  FaTicketAlt,
+  FaUserCircle,
+  FaUsers,
   FaWallet,
 } from 'react-icons/fa'
 import { useMessage } from '@sealos/ui'
@@ -35,6 +40,7 @@ import { MouseEvent, useCallback, useEffect, useState } from 'react'
 import { createMasterAPP, masterApp } from 'sealos-desktop-sdk/master'
 import IframeWindow from './iframe_window'
 import useSessionStore from '@/stores/session'
+import LangSelectSimple from '@/components/LangSelect/simple'
 
 export default function DesktopContent(props: any) {
   const { t, i18n } = useTranslation()
@@ -48,6 +54,7 @@ export default function DesktopContent(props: any) {
   const handleDoubleClick = (e: MouseEvent<HTMLDivElement>, item: TApp) => {
     e.preventDefault()
     if (item?.name) {
+      console.log(item)
       openApp(item)
     }
   }
@@ -122,9 +129,10 @@ export default function DesktopContent(props: any) {
     },
   })
 
-  const menuItems = renderApps.length > 0 ? renderApps.map((app) => ({
-    label: 'Dashboard',// app.i18n?.[i18n.language]?.name || t(app.name),
-    icon: FaRocket, // app.icon,
+  const menuItems = renderApps.length > 0 ? renderApps.map((app: TApp) => ({
+    ...app,
+    label: app.i18n?.[i18n.language]?.name || t(app.name),
+    // icon: FaRocket, //<Image src={app?.icon || '/logo.svg'} />,
   })) : [
     { label: 'Dashboard', icon: FaRocket },
     { label: 'Forward', icon: FaRocket },
@@ -176,26 +184,26 @@ export default function DesktopContent(props: any) {
             />
           </HStack>
           <VStack spacing={1} mt={4} w="100%">
-            {menuItems.map((item, index) => (
+            {renderApps.map((app) => (
               isSidebarOpen ?
                 <Button
                   w="100%"
                   justifyContent="flex-start"
                   variant="ghost"
-                  key={index}
-                  leftIcon={<item.icon/>}
-                  onClick={(e) => handleDoubleClick(e, item)}
+                  key={app.key}
+                  leftIcon={<Image src={app?.icon || '/logo.svg'} draggable={false} width="16px" height="16px"/>}
+                  onClick={(e) => handleDoubleClick(e, app)}
                 >
-                  <Text fontSize="md">{item.label}</Text>
+                  <Text fontSize="md">{app?.name || 'App'}</Text>
                 </Button>
                 :
                 <IconButton
                   w="100%"
                   variant="ghost"
-                  key={index}
-                  aria-label={item.label}
-                  icon={<item.icon/>}
-                  onClick={(e) => handleDoubleClick(e, item)}
+                  key={app.key}
+                  aria-label={app.name}
+                  leftIcon={<Image src={app?.icon || '/logo.svg'} draggable={false} width="16px" height="16px"/>}
+                  onClick={(e) => handleDoubleClick(e, app)}
                 />
             ))}
           </VStack>
@@ -212,30 +220,38 @@ export default function DesktopContent(props: any) {
             <PopoverBody>
               <VStack align="start" spacing={1} w="100%">
                 <Button w="100%" justifyContent="flex-start" variant="ghost" leftIcon={<FaUserCircle/>}>
-                  {t('Manage Team')}
+                  <Text fontSize="md">{t('Manage Team')}</Text>
                 </Button>
                 <Button w="100%" justifyContent="flex-start" variant="ghost" leftIcon={<FaWallet/>}>
                   <Text fontSize="md">{t('Balance')}</Text>
                 </Button>
                 <Button w="100%" justifyContent="flex-start" variant="ghost" leftIcon={<FaDownload/>}>
-                  kubeconfig
+                  <Text fontSize="md">kubeconfig</Text>
                 </Button>
-                <Button w="100%" justifyContent="flex-start" colorScheme="red" variant="ghost"
-                        leftIcon={<FaSignOutAlt/>}>
-                  {t('Quit')}
+                <Button
+                  w="100%"
+                  justifyContent="flex-start"
+                  colorScheme="red"
+                  variant="ghost"
+                  leftIcon={<FaSignOutAlt/>}
+                >
+                  <Text fontSize="md">{t('Quit')}</Text>
                 </Button>
               </VStack>
             </PopoverBody>
           </PopoverContent>
         </Popover>
+
+        <Button>
+          <LangSelectSimple/>
+        </Button>
       </Box>
 
       {/* Main Content */}
-      <Box flex="1" p={6}>
-        <Heading mb={6}>Welcome, {userInfo?.user.name} <span role="img" aria-label="emoji">🥰</span></Heading>
+      <Box flex="1">
         {/* Running Apps */}
         {runningInfo.map((process) => (
-          <AppWindow key={process.pid} style={{ height: '100vh' }} pid={process.pid}> </AppWindow>
+          <IframeWindow key={process.pid} pid={process.pid}/>
         ))}
       </Box>
     </Flex>
