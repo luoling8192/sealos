@@ -18,21 +18,7 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
-import {
-  FaArrowLeft,
-  FaArrowRight,
-  FaChartBar,
-  FaClipboardList,
-  FaCog,
-  FaDownload,
-  FaNetworkWired,
-  FaRocket,
-  FaSignOutAlt,
-  FaTicketAlt,
-  FaUserCircle,
-  FaUsers,
-  FaWallet,
-} from 'react-icons/fa'
+import { FaArrowLeft, FaArrowRight, FaDownload, FaSignOutAlt, FaUserCircle, FaWallet } from 'react-icons/fa'
 import { useMessage } from '@sealos/ui'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'next-i18next'
@@ -128,22 +114,6 @@ export default function DesktopContent(props: any) {
       })
     },
   })
-
-  const menuItems = renderApps.length > 0 ? renderApps.map((app: TApp) => ({
-    ...app,
-    label: app.i18n?.[i18n.language]?.name || t(app.name),
-    // icon: FaRocket, //<Image src={app?.icon || '/logo.svg'} />,
-  })) : [
-    { label: 'Dashboard', icon: FaRocket },
-    { label: 'Forward', icon: FaRocket },
-    { label: 'Agent', icon: FaUserCircle },
-    { label: 'Network', icon: FaNetworkWired },
-    { label: 'Ticket', icon: FaTicketAlt },
-    { label: 'Users', icon: FaUsers },
-    { label: 'Statistics', icon: FaChartBar },
-    { label: 'Log', icon: FaClipboardList },
-    { label: 'Config', icon: FaCog },
-  ]
 
   const [isSidebarOpen, setSidebarOpen] = useState(true)
 
@@ -257,96 +227,3 @@ export default function DesktopContent(props: any) {
     </Flex>
   )
 }
-
-// <Box
-//   id="desktop"
-//   className={styles.desktop}
-//   backgroundImage={`url(${backgroundImage || '/images/bg-blue.jpg'})`}
-//   backgroundRepeat={'no-repeat'}
-//   backgroundSize={'cover'}
-// >
-//   <Flex w="100%" h="100%" alignItems={'center'} flexDirection={'column'}>
-//     <Box mt="12vh" minW={'508px'}>
-//       <TimeComponent />
-//     </Box>
-//     {showGuide ? (
-//       <>
-//         <UserGuide />
-//         <Box
-//           position="fixed"
-//           top="0"
-//           left="0"
-//           width="100%"
-//           height="100%"
-//           backgroundColor="rgba(0, 0, 0, 0.7)" // 半透明黑色背景
-//           zIndex="11000" // 保证蒙层在最上层
-//         />
-//       </>
-//     ) : (
-//       <></>
-//     )}
-//     {/* desktop apps */}
-//     <Grid
-//       mt="50px"
-//       minW={'508px'}
-//       maxH={'300px'}
-//       templateRows={'repeat(2, 100px)'}
-//       templateColumns={'repeat(5, 72px)'}
-//       gap={'36px'}
-//     >
-//       {renderApps &&
-//         renderApps.slice(0, maxItems).map((item: TApp, index) => (
-//           <GridItem
-//             w="72px"
-//             h="100px"
-//             key={index}
-//             userSelect="none"
-//             cursor={'pointer'}
-//             onClick={(e) => handleDoubleClick(e, item)}
-//           >
-//             <Box
-//               className={item.key}
-//               w="72px"
-//               h="72px"
-//               p={'12px'}
-//               border={'1px solid #FFFFFF'}
-//               borderRadius={8}
-//               boxShadow={'0px 1.16667px 2.33333px rgba(0, 0, 0, 0.2)'}
-//               backgroundColor={'rgba(244, 246, 248, 0.9)'}
-//             >
-//               <Image
-//                 width="100%"
-//                 height="100%"
-//                 src={item?.icon}
-//                 fallbackSrc={logo || '/logo.svg'}
-//                 draggable={false}
-//                 alt="user avator"
-//               />
-//             </Box>
-//             <Text
-//               textShadow={'0px 1px 2px rgba(0, 0, 0, 0.4)'}
-//               textAlign={'center'}
-//               mt="8px"
-//               color={'#FFFFFF'}
-//               fontSize={'13px'}
-//               lineHeight={'16px'}
-//             >
-//               {item?.i18n?.[i18n?.language]?.name
-//                 ? item?.i18n?.[i18n?.language]?.name
-//                 : t(item?.name)}
-//             </Text>
-//           </GridItem>
-//         ))}
-//     </Grid>
-//     <MoreButton />
-//     <UserMenu />
-//   </Flex>
-//   {/* opened apps */}
-//   {runningInfo.map((process) => {
-//     return (
-//       <AppWindow key={process.pid} style={{ height: '100vh' }} pid={process.pid}>
-//         <IframeWindow pid={process.pid} />
-//       </AppWindow>
-//     );
-//   })}
-// </Box>
