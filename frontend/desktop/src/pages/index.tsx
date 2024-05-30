@@ -99,7 +99,7 @@ export default function Home({ sealos_cloud_domain }: { sealos_cloud_domain: str
   }, [workspaceInviteCode]);
 
   return (
-    <Box position={'relative'} overflow={'hidden'} w="100vw" h="100vh">
+    <Box position={'relative'} overflowX={'hidden'} w="100vw">
       <Head>
         <title>{layoutConfig?.meta.title}</title>
         <meta name="description" content={layoutConfig?.meta.description} />
@@ -109,8 +109,6 @@ export default function Home({ sealos_cloud_domain }: { sealos_cloud_domain: str
       })}
       <MoreAppsContext.Provider value={{ showMoreApps, setShowMoreApps }}>
         <DesktopContent />
-        <FloatButton />
-        <MoreApps />
       </MoreAppsContext.Provider>
     </Box>
   );
