@@ -218,7 +218,214 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         'name': 'nocodb-sxsshrdt',
         'type': 'iframe',
       },
-
+      {
+        'key': 'system-applaunchpad',
+        'data': {
+          'desc': 'App Launchpad',
+          'url': 'https://applaunchpad.sealos.bgp.st:443',
+        },
+        'displayType': 'normal',
+        'i18n': {
+          'zh': {
+            'name': '应用管理',
+          },
+          'zh-Hans': {
+            'name': '应用管理',
+          },
+        },
+        'icon': 'https://applaunchpad.sealos.bgp.st:443/logo.svg',
+        'menuData': {
+          'helpDropDown': false,
+          'nameColor': 'text-black',
+        },
+        'name': 'App Launchpad',
+        'type': 'iframe',
+      },
+      {
+        'key': 'system-costcenter',
+        'data': {
+          'desc': 'sealos CLoud costcenter',
+          'url': 'https://costcenter.sealos.bgp.st:443',
+        },
+        'displayType': 'normal',
+        'i18n': {
+          'zh': {
+            'name': '费用中心',
+          },
+          'zh-Hans': {
+            'name': '费用中心',
+          },
+        },
+        'icon': 'https://costcenter.sealos.bgp.st:443/logo.svg',
+        'menuData': {
+          'helpDropDown': false,
+          'nameColor': 'text-black',
+        },
+        'name': 'Cost Center',
+        'type': 'iframe',
+      },
+      {
+        'key': 'system-cronjob',
+        'data': {
+          'desc': 'CronJob',
+          'url': 'https://cronjob.sealos.bgp.st:443',
+        },
+        'displayType': 'normal',
+        'i18n': {
+          'zh': {
+            'name': '定时任务',
+          },
+          'zh-Hans': {
+            'name': '定时任务',
+          },
+        },
+        'icon': 'https://cronjob.sealos.bgp.st:443/logo.svg',
+        'menuData': {
+          'helpDropDown': false,
+          'nameColor': 'text-black',
+        },
+        'name': 'CronJob',
+        'type': 'iframe',
+      },
+      {
+        'key': 'system-dbprovider',
+        'data': {
+          'desc': 'Database',
+          'url': 'https://dbprovider.sealos.bgp.st:443',
+        },
+        'displayType': 'normal',
+        'i18n': {
+          'zh': {
+            'name': '数据库',
+          },
+          'zh-Hans': {
+            'name': '数据库',
+          },
+        },
+        'icon': 'https://dbprovider.sealos.bgp.st:443/logo.svg',
+        'menuData': {
+          'helpDocs': 'https://sealos.run/docs/guides/dbprovider/config-docs/',
+          'helpDropDown': false,
+          'nameColor': 'text-black',
+        },
+        'name': 'Database',
+        'type': 'iframe',
+      },
+      {
+        'key': 'system-objectstorage',
+        'data': {
+          'desc': 'object storage',
+          'url': 'https://objectstorage.sealos.bgp.st:443',
+        },
+        'displayType': 'normal',
+        'i18n': {
+          'zh': {
+            'name': '对象存储',
+          },
+          'zh-Hans': {
+            'name': '对象存储',
+          },
+        },
+        'icon': 'https://objectstorage.sealos.bgp.st:443/logo.svg',
+        'name': 'Object Storage',
+        'type': 'iframe',
+      },
+      {
+        'key': 'system-template',
+        'data': {
+          'url': 'https://template.sealos.bgp.st:443',
+        },
+        'displayType': 'normal',
+        'i18n': {
+          'zh': {
+            'name': '应用商店',
+          },
+          'zh-Hans': {
+            'name': '应用商店',
+          },
+        },
+        'icon': 'https://template.sealos.bgp.st:443/logo.svg',
+        'menuData': {
+          'nameColor': 'text-black',
+        },
+        'name': 'App Store',
+        'type': 'iframe',
+      },
+      {
+        'key': 'system-terminal',
+        'data': {
+          'desc': 'sealos CLoud Terminal',
+          'url': 'https://terminal.sealos.bgp.st:443',
+        },
+        'displayType': 'normal',
+        'i18n': {
+          'zh': {
+            'name': '终端',
+          },
+          'zh-Hans': {
+            'name': '终端',
+          },
+        },
+        'icon': 'https://terminal.sealos.bgp.st:443/logo.svg',
+        'menuData': {
+          'helpDropDown': false,
+          'nameColor': 'text-black',
+        },
+        'name': 'Terminal',
+        'type': 'iframe',
+      },
+      {
+        'key': 'user-bytebase-vpuutrka',
+        'data': {
+          'url': 'https://dbulmxdl.sealos.bgp.st',
+        },
+        'displayType': 'normal',
+        'icon': 'https://raw.githubusercontent.com/bytebase/bytebase/main/frontend/src/assets/logo-icon.svg',
+        'menuData': {
+          'nameColor': 'text-black',
+        },
+        'name': 'bytebase-vpuutrka',
+        'type': 'iframe',
+      },
+      {
+        'key': 'user-dbgate-ofuzezhf',
+        'data': {
+          'url': 'https://dbgate-ydvfvaeq.sealos.bgp.st',
+        },
+        'displayType': 'normal',
+        'icon': 'https://dbgate-ydvfvaeq.sealos.bgp.st/favicon.ico',
+        'menuData': {
+          'nameColor': 'text-black',
+        },
+        'name': 'dbgate-ofuzezhf',
+        'type': 'iframe',
+      },
+      {
+        'key': 'user-kuboard-amdgjuuy',
+        'data': {
+          'url': 'https://ggvoadgw.sealos.bgp.st',
+        },
+        'displayType': 'normal',
+        'icon': 'https://kuboard.cn/favicon.png',
+        'menuData': {
+          'nameColor': 'text-black',
+        },
+        'name': 'kuboard-amdgjuuy',
+        'type': 'iframe',
+      },
+      {
+        'key': 'user-nocodb-sxsshrdt',
+        'data': {
+          'url': 'https://nocodb-pzpcyojr.sealos.bgp.st',
+        },
+        'displayType': 'normal',
+        'icon': 'https://raw.githubusercontent.com/nocodb/nocodb/develop/packages/nc-gui/assets/img/brand/nocodb-logo.svg',
+        'menuData': {
+          'nameColor': 'text-black',
+        },
+        'name': 'nocodb-sxsshrdt',
+        'type': 'iframe',
+      },
     ],
   })
 
