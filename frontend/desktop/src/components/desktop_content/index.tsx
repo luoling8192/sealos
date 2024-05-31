@@ -137,18 +137,13 @@ export default function DesktopContent(props: any) {
       <Box
         w={isSidebarOpen ? '250px' : '60px'}
         bg="white"
-        p={4}
         boxShadow="lg"
         transition="width 0.3s"
         display="flex"
         flexDirection="column"
         justifyContent="space-between"
-
-        overflowX="hidden"
-        overflowY="auto"
-        h="100vh"
       >
-        <HStack justifyContent="space-between" w="100%">
+        <HStack justifyContent="space-between" w="100%" p={4}>
           {isSidebarOpen && (
             <HStack>
               <Image src={'/logo.svg'} alt="Logo" h="36px"/>
@@ -163,33 +158,40 @@ export default function DesktopContent(props: any) {
           />
         </HStack>
 
-        <VStack spacing={1} mt={4} w="100%">
-          {renderApps.map((app) => (
-            isSidebarOpen ? (
-              <Button
-                w="100%"
-                justifyContent="flex-start"
-                variant="ghost"
-                key={app.key}
-                leftIcon={<Image src={app?.icon || '/logo.svg'} draggable={false} width="1.5rem" height="1.5rem"/>}
-                onClick={(e) => handleDoubleClick(e, app)}
-              >
-                <Text fontSize="md" isTruncated maxW="180px">{app?.name || 'App'}</Text>
-              </Button>
-            ) : (
-              <IconButton
-                w="100%"
-                variant="ghost"
-                key={app.key}
-                aria-label={app.name}
-                icon={<Image src={app?.icon || '/logo.svg'} draggable={false} width="24px" height="24px"/>}
-                onClick={(e) => handleDoubleClick(e, app)}
-              />
-            )
-          ))}
-        </VStack>
+        <Box overflowY="auto" overflowX="hidden" w="100%" px={4} mr={-4}>
+          <VStack
+            spacing={1}
+            mt={4}
+            mb={4}
+            w="100%"
+          >
+            {renderApps.map((app) => (
+              isSidebarOpen ? (
+                <Button
+                  w="100%"
+                  justifyContent="flex-start"
+                  variant="ghost"
+                  key={app.key}
+                  leftIcon={<Image src={app?.icon || '/logo.svg'} draggable={false} width="1.5rem" height="1.5rem"/>}
+                  onClick={(e) => handleDoubleClick(e, app)}
+                >
+                  <Text fontSize="md" isTruncated maxW="180px">{app?.name || 'App'}</Text>
+                </Button>
+              ) : (
+                <IconButton
+                  w="100%"
+                  variant="ghost"
+                  key={app.key}
+                  aria-label={app.name}
+                  icon={<Image src={app?.icon || '/logo.svg'} draggable={false} width="24px" height="24px"/>}
+                  onClick={(e) => handleDoubleClick(e, app)}
+                />
+              )
+            ))}
+          </VStack>
+        </Box>
 
-        <VStack w="100%">
+        <VStack w="100%" p={4}>
           <Popover>
             <PopoverTrigger>
               {/*{isSidebarOpen ?*/}
@@ -203,7 +205,7 @@ export default function DesktopContent(props: any) {
               {/*  )*/}
               {/*}*/}
 
-              <HStack justifyContent="center" spacing={3} mt="auto" mb={4} cursor="pointer">
+              <HStack justifyContent="center" spacing={3} mt={4} cursor="pointer">
                 <FaUserCircle size={isSidebarOpen ? '24px' : '1.5rem'}/>
                 {isSidebarOpen && <Text>{userInfo?.user.name}</Text>}
               </HStack>
@@ -235,15 +237,13 @@ export default function DesktopContent(props: any) {
             </PopoverContent>
           </Popover>
 
-          {
-            isSidebarOpen && (
-              <HStack w="100%" justifyContent="center">
-                <IconButton icon={<FaLanguage/>} variant="ghost" aria-label={t('Switch language')}
-                            onClick={() => i18n.changeLanguage()}/>
-                <IconButton icon={<FaBell/>} variant="ghost" aria-label={t('Notification')}/>
-              </HStack>
-            )
-          }
+          {isSidebarOpen && (
+            <HStack w="100%" justifyContent="center">
+              <IconButton icon={<FaLanguage/>} variant="ghost" aria-label={t('Switch language')}
+                          onClick={() => i18n.changeLanguage()}/>
+              <IconButton icon={<FaBell/>} variant="ghost" aria-label={t('Notification')}/>
+            </HStack>
+          )}
         </VStack>
       </Box>
 
