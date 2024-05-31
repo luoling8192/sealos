@@ -158,7 +158,7 @@ export default function DesktopContent(props: any) {
           />
         </HStack>
 
-        <Box overflowY="auto" overflowX="hidden" w="100%" px={4} mr={-4}>
+        <Box overflowY="auto" overflowX="hidden" w="100%" px={4} pb={4} mr={-4}>
           <VStack
             spacing={1}
             mt={4}
@@ -191,60 +191,48 @@ export default function DesktopContent(props: any) {
           </VStack>
         </Box>
 
-        <VStack w="100%" p={4}>
-          <Popover>
-            <PopoverTrigger>
-              {/*{isSidebarOpen ?*/}
-              {/*  (*/}
-              {/*    <Button justifyContent="flex-start" variant="ghost" leftIcon={<FaUserCircle/>} size="lg">*/}
-              {/*      <Text fontSize="md">{userInfo?.user?.name ?? 'User'}</Text>*/}
-              {/*    </Button>*/}
-              {/*  ) :*/}
-              {/*  (*/}
-              {/*    <IconButton icon={<FaUserCircle/>} variant="ghost" aria-label={t('User')}/>*/}
-              {/*  )*/}
-              {/*}*/}
-
-              <HStack justifyContent="center" spacing={3} mt={4} cursor="pointer">
-                <FaUserCircle size={isSidebarOpen ? '24px' : '1.5rem'}/>
-                {isSidebarOpen && <Text>{userInfo?.user.name}</Text>}
-              </HStack>
-            </PopoverTrigger>
-            <PopoverContent>
-              <PopoverArrow/>
-              <PopoverBody>
-                <VStack align="start" spacing={1} w="100%">
-                  <Button w="100%" justifyContent="flex-start" variant="ghost" leftIcon={<FaUserCircle/>}>
-                    <Text fontSize="md">{t('Manage Team')}</Text>
-                  </Button>
-                  <Button w="100%" justifyContent="flex-start" variant="ghost" leftIcon={<FaWallet/>}>
-                    <Text fontSize="md">{t('Balance')}</Text>
-                  </Button>
-                  <Button w="100%" justifyContent="flex-start" variant="ghost" leftIcon={<FaDownload/>}>
-                    <Text fontSize="md">kubeconfig</Text>
-                  </Button>
-                  <Button
-                    w="100%"
-                    justifyContent="flex-start"
-                    colorScheme="red"
-                    variant="ghost"
-                    leftIcon={<FaSignOutAlt/>}
-                  >
-                    <Text fontSize="md">{t('Quit')}</Text>
-                  </Button>
-                </VStack>
-              </PopoverBody>
-            </PopoverContent>
-          </Popover>
-
-          {isSidebarOpen && (
+        {isSidebarOpen && (
+          <VStack w="100%" p={4}>
+            <Popover>
+              <PopoverTrigger>
+                <HStack justifyContent="center" spacing={3} mt={4} cursor="pointer">
+                  <FaUserCircle size={isSidebarOpen ? '24px' : '1.5rem'}/>
+                  {isSidebarOpen && <Text>{userInfo?.user.name}</Text>}
+                </HStack>
+              </PopoverTrigger>
+              <PopoverContent>
+                <PopoverArrow/>
+                <PopoverBody>
+                  <VStack align="start" spacing={1} w="100%">
+                    <Button w="100%" justifyContent="flex-start" variant="ghost" leftIcon={<FaUserCircle/>}>
+                      <Text fontSize="md">{t('Manage Team')}</Text>
+                    </Button>
+                    <Button w="100%" justifyContent="flex-start" variant="ghost" leftIcon={<FaWallet/>}>
+                      <Text fontSize="md">{t('Balance')}</Text>
+                    </Button>
+                    <Button w="100%" justifyContent="flex-start" variant="ghost" leftIcon={<FaDownload/>}>
+                      <Text fontSize="md">kubeconfig</Text>
+                    </Button>
+                    <Button
+                      w="100%"
+                      justifyContent="flex-start"
+                      colorScheme="red"
+                      variant="ghost"
+                      leftIcon={<FaSignOutAlt/>}
+                    >
+                      <Text fontSize="md">{t('Quit')}</Text>
+                    </Button>
+                  </VStack>
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
             <HStack w="100%" justifyContent="center">
               <IconButton icon={<FaLanguage/>} variant="ghost" aria-label={t('Switch language')}
                           onClick={() => i18n.changeLanguage()}/>
               <IconButton icon={<FaBell/>} variant="ghost" aria-label={t('Notification')}/>
             </HStack>
-          )}
-        </VStack>
+          </VStack>
+        )}
       </Box>
 
       <Box flex="1">
