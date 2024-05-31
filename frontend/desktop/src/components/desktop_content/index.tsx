@@ -35,6 +35,8 @@ import { MouseEvent, useCallback, useEffect, useState } from 'react'
 import { createMasterAPP, masterApp } from 'sealos-desktop-sdk/master'
 import IframeWindow from './iframe_window'
 import useSessionStore from '@/stores/session'
+import LangSelectSimple from '@/components/LangSelect/simple'
+import Account from '@/components/account'
 
 export default function DesktopContent(props: any) {
   const { t, i18n } = useTranslation()
@@ -175,7 +177,11 @@ export default function DesktopContent(props: any) {
                   leftIcon={<Image src={app?.icon || '/logo.svg'} draggable={false} width="1.5rem" height="1.5rem"/>}
                   onClick={(e) => handleDoubleClick(e, app)}
                 >
-                  <Text fontSize="md" isTruncated maxW="180px">{app?.name || 'App'}</Text>
+                  <Text fontSize="md" isTruncated maxW="180px">
+                    {app?.i18n?.[i18n?.language]?.name
+                      ? app?.i18n?.[i18n?.language]?.name
+                      : t(app?.name)}
+                  </Text>
                 </Button>
               ) : (
                 <IconButton
@@ -227,8 +233,9 @@ export default function DesktopContent(props: any) {
               </PopoverContent>
             </Popover>
             <HStack w="100%" justifyContent="center">
-              <IconButton icon={<FaLanguage/>} variant="ghost" aria-label={t('Switch language')}
-                          onClick={() => i18n.changeLanguage()}/>
+              <Button variant="ghost">
+                <LangSelectSimple/>
+              </Button>
               <IconButton icon={<FaBell/>} variant="ghost" aria-label={t('Notification')}/>
             </HStack>
           </VStack>
