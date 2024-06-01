@@ -2,7 +2,6 @@
   "name": "desktop",
   "version": "1.0.0",
   "private": true,
-  "type": "module",
   "scripts": {
     "dev": "dotenv -e .env.local next dev",
     "build": "next build",

@@ -15,29 +15,34 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { useMessage } from '@sealos/ui';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
 import type { MouseEvent } from 'react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   FaArrowLeft,
   FaArrowRight,
   FaBell,
   FaDownload,
-  FaLanguage,
+  FaKey,
   FaSignOutAlt,
   FaUserCircle,
   FaWallet,
 } from 'react-icons/fa';
 import { createMasterAPP, masterApp } from 'sealos-desktop-sdk/master';
 import IframeWindow from './iframe_window';
-import type { TApp, WindowSize } from '@/types';
+import PasswordModify from '@/components/account/PasswordModify';
+import { formatMoney } from '@/utils/format';
+import download from '@/utils/downloadFIle';
+import type { ApiResp, TApp, WindowSize } from '@/types';
 import useSessionStore from '@/stores/session';
 import { useConfigStore } from '@/stores/config';
 import useAppStore from '@/stores/app';
+import request from '@/services/request';
+import { useCopyData } from '@/hooks/useCopyData';
+import LangSelectSimple from '@/components/LangSelect/simple';
 import { getGlobalNotification } from '@/api/platform';
-import LangSelectSimple from '@/components/LangSelect/simple'
-import Account from '@/components/account'
 
 export default function DesktopContent(props: any) {
   const { t, i18n } = useTranslation();
@@ -138,6 +143,35 @@ export default function DesktopContent(props: any) {
     setSidebarOpen(!isSidebarOpen);
   };
 
+  /**
+   * Account
+   */
+  const [showId, setShowId] = useState(true);
+  const passwordEnabled = useConfigStore().authConfig?.idp?.password?.enabled;
+  const rechargeEnabled = useConfigStore().commonConfig?.rechargeEnabled;
+  const installApp = useAppStore(s => s.installedApps);
+
+  const router = useRouter();
+  const { delSession, session, setToken } = useSessionStore();
+  const user = session?.user;
+  const { data } = useQuery({
+    queryKey: ['getAmount', { userId: user?.userCrUid }],
+    queryFn: () =>
+      request<any, ApiResp<{ balance: number; deductionBalance: number }>>(
+        '/api/account/getAmount',
+      ),
+    enabled: !!user,
+  });
+  const balance = useMemo(() => {
+    let real_balance = data?.data?.balance || 0;
+    if (data?.data?.deductionBalance) {
+      real_balance -= data?.data.deductionBalance;
+    }
+    return real_balance;
+  }, [data]);
+  const queryclient = useQueryClient();
+  const kubeconfig = session?.kubeconfig || '';
+
   return (
     <Flex h="100vh" bg="gray.100">
       <Box
@@ -171,32 +205,34 @@ export default function DesktopContent(props: any) {
             mb={4}
             w="100%"
           >
-            {renderApps.map((app) => (
-              isSidebarOpen ? (
-                <Button
-                  w="100%"
-                  justifyContent="flex-start"
-                  variant="ghost"
-                  key={app.key}
-                  leftIcon={<Image src={app?.icon || '/logo.svg'} draggable={false} width="1.5rem" height="1.5rem"/>}
-                  onClick={(e) => handleDoubleClick(e, app)}
-                >
-                  <Text fontSize="md" isTruncated maxW="180px">
-                    {app?.i18n?.[i18n?.language]?.name
-                      ? app?.i18n?.[i18n?.language]?.name
-                      : t(app?.name)}
-                  </Text>
-                </Button>
-              ) : (
-                <IconButton
-                  w="100%"
-                  variant="ghost"
-                  key={app.key}
-                  aria-label={app.name}
-                  icon={<Image src={app?.icon || '/logo.svg'} draggable={false} width="24px" height="24px"/>}
-                  onClick={(e) => handleDoubleClick(e, app)}
-                />
-              )
+            {renderApps.map(app => (
+              isSidebarOpen
+                ? (
+                  <Button
+                    w="100%"
+                    justifyContent="flex-start"
+                    variant="ghost"
+                    key={app.key}
+                    leftIcon={<Image src={app?.icon || '/logo.svg'} draggable={false} width="1.5rem" height="1.5rem" />}
+                    onClick={e => handleDoubleClick(e, app)}
+                  >
+                    <Text fontSize="md" isTruncated maxW="180px">
+                      {app?.i18n?.[i18n?.language]?.name
+                        ? app?.i18n?.[i18n?.language]?.name
+                        : t(app?.name)}
+                    </Text>
+                  </Button>
+                  )
+                : (
+                  <IconButton
+                    w="100%"
+                    variant="ghost"
+                    key={app.key}
+                    aria-label={app.name}
+                    icon={<Image src={app?.icon || '/logo.svg'} draggable={false} width="24px" height="24px" />}
+                    onClick={e => handleDoubleClick(e, app)}
+                  />
+                  )
             ))}
           </VStack>
         </Box>
@@ -206,29 +242,67 @@ export default function DesktopContent(props: any) {
             <Popover>
               <PopoverTrigger>
                 <HStack justifyContent="center" spacing={3} mt={4} cursor="pointer">
-                  <FaUserCircle size={isSidebarOpen ? '24px' : '1.5rem'}/>
+                  <FaUserCircle size={isSidebarOpen ? '24px' : '1.5rem'} />
                   {isSidebarOpen && <Text>{userInfo?.user.name}</Text>}
                 </HStack>
               </PopoverTrigger>
               <PopoverContent>
-                <PopoverArrow/>
+                <PopoverArrow />
                 <PopoverBody>
                   <VStack align="start" spacing={1} w="100%">
-                    <Button w="100%" justifyContent="flex-start" variant="ghost" leftIcon={<FaUserCircle/>}>
+                    <Button w="100%" justifyContent="flex-start" variant="ghost" leftIcon={<FaUserCircle />}>
                       <Text fontSize="md">{t('Manage Team')}</Text>
                     </Button>
-                    <Button w="100%" justifyContent="flex-start" variant="ghost" leftIcon={<FaWallet/>}>
-                      <Text fontSize="md">{t('Balance')}</Text>
+                    <Button
+                      w="100%"
+                      justifyContent="flex-start"
+                      variant="ghost"
+                      leftIcon={<FaWallet />}
+                      onClick={() => {
+                        const costcenter = installApp.find(t => t.key === 'system-costcenter');
+                        if (!costcenter)
+                          return;
+                        openApp(costcenter, {
+                          query: {
+                            openRecharge: 'true',
+                          },
+                        });
+                      }}
+                    >
+                      <Text fontSize="md">{`${t('Balance')}: ${formatMoney(balance).toFixed(2)}`}</Text>
                     </Button>
-                    <Button w="100%" justifyContent="flex-start" variant="ghost" leftIcon={<FaDownload/>}>
+                    <Button
+                      w="100%"
+                      justifyContent="flex-start"
+                      variant="ghost"
+                      leftIcon={<FaDownload />}
+                      onClick={() => kubeconfig && download('kubeconfig.yaml', kubeconfig)}
+                    >
                       <Text fontSize="md">kubeconfig</Text>
+                    </Button>
+                    <Button
+                      w="100%"
+                      justifyContent="flex-start"
+                      variant="ghost"
+                      leftIcon={<FaKey />}
+                    >
+                      <PasswordModify mr="0">
+                        <Text fontSize="md">{t('changePassword')}</Text>
+                      </PasswordModify>
                     </Button>
                     <Button
                       w="100%"
                       justifyContent="flex-start"
                       colorScheme="red"
                       variant="ghost"
-                      leftIcon={<FaSignOutAlt/>}
+                      leftIcon={<FaSignOutAlt />}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        delSession();
+                        queryclient.clear();
+                        router.replace('/signin');
+                        setToken('');
+                      }}
                     >
                       <Text fontSize="md">{t('Quit')}</Text>
                     </Button>
@@ -238,9 +312,9 @@ export default function DesktopContent(props: any) {
             </Popover>
             <HStack w="100%" justifyContent="center">
               <Button variant="ghost">
-                <LangSelectSimple/>
+                <LangSelectSimple />
               </Button>
-              <IconButton icon={<FaBell/>} variant="ghost" aria-label={t('Notification')}/>
+              <IconButton icon={<FaBell />} variant="ghost" aria-label={t('Notification')} />
             </HStack>
           </VStack>
         )}
