@@ -31,6 +31,8 @@ import {
   FaWallet,
 } from 'react-icons/fa';
 import { createMasterAPP, masterApp } from 'sealos-desktop-sdk/master';
+import WorkspaceToggle from '../team/WorkspaceToggle';
+import TeamCenter from '../team/TeamCenter';
 import IframeWindow from './iframe_window';
 import PasswordModify from '@/components/account/PasswordModify';
 import { formatMoney } from '@/utils/format';
@@ -201,8 +203,7 @@ export default function DesktopContent(props: any) {
         <Box overflowY="auto" overflowX="hidden" w="100%" px={4} pb={4} mr={-4}>
           <VStack
             spacing={1}
-            mt={4}
-            mb={4}
+            mt={2}
             w="100%"
           >
             {renderApps.map(app => (
@@ -241,18 +242,20 @@ export default function DesktopContent(props: any) {
           <VStack w="100%" p={4}>
             <Popover>
               <PopoverTrigger>
-                <HStack justifyContent="center" spacing={3} mt={4} cursor="pointer">
+                <HStack justifyContent="center" mt={1} cursor="pointer" userSelect="none">
                   <FaUserCircle size={isSidebarOpen ? '24px' : '1.5rem'} />
-                  {isSidebarOpen && <Text>{userInfo?.user.name}</Text>}
+                  {isSidebarOpen && <Text fontSize="lg">{userInfo?.user.name}</Text>}
                 </HStack>
               </PopoverTrigger>
               <PopoverContent>
                 <PopoverArrow />
                 <PopoverBody>
                   <VStack align="start" spacing={1} w="100%">
-                    <Button w="100%" justifyContent="flex-start" variant="ghost" leftIcon={<FaUserCircle />}>
-                      <Text fontSize="md">{t('Manage Team')}</Text>
-                    </Button>
+                    <TeamCenter>
+                      <Button w="100%" justifyContent="flex-start" variant="ghost" leftIcon={<FaUserCircle />}>
+                        <Text fontSize="md">{t('Manage Team')}</Text>
+                      </Button>
+                    </TeamCenter>
                     <Button
                       w="100%"
                       justifyContent="flex-start"
@@ -280,16 +283,11 @@ export default function DesktopContent(props: any) {
                     >
                       <Text fontSize="md">kubeconfig</Text>
                     </Button>
-                    <Button
-                      w="100%"
-                      justifyContent="flex-start"
-                      variant="ghost"
-                      leftIcon={<FaKey />}
-                    >
-                      <PasswordModify mr="0">
+                    <PasswordModify>
+                      <Button w="100%" justifyContent="flex-start" variant="ghost" leftIcon={<FaKey />}>
                         <Text fontSize="md">{t('changePassword')}</Text>
-                      </PasswordModify>
-                    </Button>
+                      </Button>
+                    </PasswordModify>
                     <Button
                       w="100%"
                       justifyContent="flex-start"
@@ -306,15 +304,19 @@ export default function DesktopContent(props: any) {
                     >
                       <Text fontSize="md">{t('Quit')}</Text>
                     </Button>
+
+                    <HStack w="100%" justifyContent="center">
+                      <Button variant="ghost">
+                        <LangSelectSimple />
+                      </Button>
+                      <IconButton icon={<FaBell />} variant="ghost" aria-label={t('Notification')} />
+                    </HStack>
                   </VStack>
                 </PopoverBody>
               </PopoverContent>
             </Popover>
-            <HStack w="100%" justifyContent="center">
-              <Button variant="ghost">
-                <LangSelectSimple />
-              </Button>
-              <IconButton icon={<FaBell />} variant="ghost" aria-label={t('Notification')} />
+            <HStack w="100%" justifyContent="center" mt={1}>
+              <WorkspaceToggle />
             </HStack>
           </VStack>
         )}

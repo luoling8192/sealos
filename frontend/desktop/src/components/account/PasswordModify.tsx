@@ -48,6 +48,7 @@ export default function PasswordModify(props: FlexProps) {
   return (
     <>
       <Box
+        width="100%"
         onClick={() => {
           reset();
           onOpen();
