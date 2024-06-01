@@ -1,13 +1,9 @@
-import { getGlobalNotification } from '@/api/platform'
-import useAppStore from '@/stores/app'
-import { useConfigStore } from '@/stores/config'
-import { TApp, WindowSize } from '@/types'
 import {
   Box,
   Button,
   Flex,
-  Heading,
   HStack,
+  Heading,
   IconButton,
   Image,
   Popover,
@@ -17,7 +13,12 @@ import {
   PopoverTrigger,
   Text,
   VStack,
-} from '@chakra-ui/react'
+} from '@chakra-ui/react';
+import { useMessage } from '@sealos/ui';
+import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'next-i18next';
+import type { MouseEvent } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   FaArrowLeft,
   FaArrowRight,
@@ -27,33 +28,33 @@ import {
   FaSignOutAlt,
   FaUserCircle,
   FaWallet,
-} from 'react-icons/fa'
-import { useMessage } from '@sealos/ui'
-import { useQuery } from '@tanstack/react-query'
-import { useTranslation } from 'next-i18next'
-import { MouseEvent, useCallback, useEffect, useState } from 'react'
-import { createMasterAPP, masterApp } from 'sealos-desktop-sdk/master'
-import IframeWindow from './iframe_window'
-import useSessionStore from '@/stores/session'
+} from 'react-icons/fa';
+import { createMasterAPP, masterApp } from 'sealos-desktop-sdk/master';
+import IframeWindow from './iframe_window';
+import type { TApp, WindowSize } from '@/types';
+import useSessionStore from '@/stores/session';
+import { useConfigStore } from '@/stores/config';
+import useAppStore from '@/stores/app';
+import { getGlobalNotification } from '@/api/platform';
 import LangSelectSimple from '@/components/LangSelect/simple'
 import Account from '@/components/account'
 
 export default function DesktopContent(props: any) {
-  const { t, i18n } = useTranslation()
-  const { installedApps: apps, runningInfo, openApp, setToHighestLayerById } = useAppStore()
-  const backgroundImage = useConfigStore().layoutConfig?.backgroundImage
-  const logo = useConfigStore().layoutConfig?.logo
-  const renderApps = apps.filter((item: TApp) => item?.displayType === 'normal')
-  const [maxItems, setMaxItems] = useState(10)
-  const { message } = useMessage()
+  const { t, i18n } = useTranslation();
+  const { installedApps: apps, runningInfo, openApp, setToHighestLayerById } = useAppStore();
+  const backgroundImage = useConfigStore().layoutConfig?.backgroundImage;
+  const logo = useConfigStore().layoutConfig?.logo;
+  const renderApps = apps.filter((item: TApp) => item?.displayType === 'normal');
+  const [maxItems, setMaxItems] = useState(10);
+  const { message } = useMessage();
 
   const handleDoubleClick = (e: MouseEvent<HTMLButtonElement>, item: TApp) => {
-    e.preventDefault()
+    e.preventDefault();
     if (item?.name) {
-      console.log(item)
-      openApp(item)
+      console.log(item);
+      openApp(item);
     }
-  }
+  };
 
   /**
    * Open Desktop Application
@@ -85,54 +86,57 @@ export default function DesktopContent(props: any) {
       pathname: string;
       appSize?: WindowSize;
     }) => {
-      const app = apps.find((item) => item.key === appKey)
-      const runningApp = runningInfo.find((item) => item.key === appKey)
-      if (!app) return
-      openApp(app, { query, pathname, appSize })
+      const app = apps.find(item => item.key === appKey);
+      const runningApp = runningInfo.find(item => item.key === appKey);
+      if (!app)
+        return;
+      openApp(app, { query, pathname, appSize });
       if (runningApp) {
-        setToHighestLayerById(runningApp.pid)
+        setToHighestLayerById(runningApp.pid);
       }
       // post message
-      const iframe = document.getElementById(`app-window-${appKey}`) as HTMLIFrameElement
-      if (!iframe) return
-      iframe.contentWindow?.postMessage(messageData, app.data.url)
+      const iframe = document.getElementById(`app-window-${appKey}`) as HTMLIFrameElement;
+      if (!iframe)
+        return;
+      iframe.contentWindow?.postMessage(messageData, app.data.url);
     },
     [apps, openApp, runningInfo, setToHighestLayerById],
-  )
+  );
 
   useEffect(() => {
-    return createMasterAPP()
-  }, [])
+    return createMasterAPP();
+  }, []);
 
   useEffect(() => {
-    return masterApp?.addEventListen('openDesktopApp', openDesktopApp)
-  }, [openDesktopApp])
+    return masterApp?.addEventListen('openDesktopApp', openDesktopApp);
+  }, [openDesktopApp]);
 
   useQuery(['getGlobalNotification'], getGlobalNotification, {
     onSuccess(data) {
-      const newID = data.data?.metadata?.uid
-      if (!newID || newID === localStorage.getItem('GlobalNotification')) return
-      localStorage.setItem('GlobalNotification', newID)
-      const title =
-        i18n.language === 'zh' && data.data?.spec?.i18ns?.zh?.message
+      const newID = data.data?.metadata?.uid;
+      if (!newID || newID === localStorage.getItem('GlobalNotification'))
+        return;
+      localStorage.setItem('GlobalNotification', newID);
+      const title
+        = i18n.language === 'zh' && data.data?.spec?.i18ns?.zh?.message
           ? data.data?.spec?.i18ns?.zh?.message
-          : data.data?.spec?.message
+          : data.data?.spec?.message;
       message({
-        title: title,
+        title,
         status: 'info',
         duration: null,
-      })
+      });
     },
-  })
+  });
 
-  const [isSidebarOpen, setSidebarOpen] = useState(true)
+  const [isSidebarOpen, setSidebarOpen] = useState(true);
 
-  const { layoutConfig } = useConfigStore()
-  const userInfo = useSessionStore((state) => state.session)
+  const { layoutConfig } = useConfigStore();
+  const userInfo = useSessionStore(state => state.session);
 
   const toggleSidebar = () => {
-    setSidebarOpen(!isSidebarOpen)
-  }
+    setSidebarOpen(!isSidebarOpen);
+  };
 
   return (
     <Flex h="100vh" bg="gray.100">
@@ -148,12 +152,12 @@ export default function DesktopContent(props: any) {
         <HStack justifyContent="space-between" w="100%" p={4}>
           {isSidebarOpen && (
             <HStack>
-              <Image src={'/logo.svg'} alt="Logo" h="36px"/>
+              <Image src="/logo.svg" alt="Logo" h="36px" />
               {isSidebarOpen && <Heading size="md">{layoutConfig?.title || 'Sealos Cloud'}</Heading>}
             </HStack>
           )}
           <IconButton
-            icon={isSidebarOpen ? <FaArrowLeft/> : <FaArrowRight/>}
+            icon={isSidebarOpen ? <FaArrowLeft /> : <FaArrowRight />}
             onClick={toggleSidebar}
             variant="ghost"
             aria-label="Toggle sidebar"
@@ -243,8 +247,8 @@ export default function DesktopContent(props: any) {
       </Box>
 
       <Box flex="1">
-        {runningInfo.length > 0 && <IframeWindow pid={runningInfo[runningInfo.length - 1].pid}/>}
+        {runningInfo.length > 0 && <IframeWindow pid={runningInfo[runningInfo.length - 1].pid} />}
       </Box>
     </Flex>
-  )
+  );
 }

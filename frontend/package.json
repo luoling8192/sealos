@@ -2,6 +2,7 @@
   "name": "sealos",
   "private": true,
   "version": "0.1.0",
+  "type": "module",
   "scripts": {
     "format": "prettier --config .prettierrc.js --write **/src/**/*.ts **/src/**/*.tsx **/src/**/*.scss **/tsconfig.*json **/*config.js **/*config.json",
     "preinstall": "npx only-allow pnpm",
@@ -55,5 +56,5 @@
       ]
     }
   },
-  "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
+  "packageManager": "pnpm@9.1.0"
 }
