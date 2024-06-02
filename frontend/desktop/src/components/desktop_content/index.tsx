@@ -13,6 +13,7 @@ import {
   PopoverTrigger,
   Text,
   VStack,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { useMessage } from '@sealos/ui';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -31,34 +32,31 @@ import {
   FaWallet,
 } from 'react-icons/fa';
 import { createMasterAPP, masterApp } from 'sealos-desktop-sdk/master';
-import WorkspaceToggle from '../team/WorkspaceToggle';
-import TeamCenter from '../team/TeamCenter';
 import IframeWindow from './iframe_window';
-import PasswordModify from '@/components/account/PasswordModify';
-import { formatMoney } from '@/utils/format';
-import download from '@/utils/downloadFIle';
-import type { ApiResp, TApp, WindowSize } from '@/types';
-import useSessionStore from '@/stores/session';
-import { useConfigStore } from '@/stores/config';
-import useAppStore from '@/stores/app';
-import request from '@/services/request';
-import { useCopyData } from '@/hooks/useCopyData';
-import LangSelectSimple from '@/components/LangSelect/simple';
 import { getGlobalNotification } from '@/api/platform';
+import LangSelectSimple from '@/components/LangSelect/simple';
+import PasswordModify from '@/components/account/PasswordModify';
+import Notification from '@/components/notification';
+import TeamCenter from '@/components/team/TeamCenter';
+import WorkspaceToggle from '@/components/team/WorkspaceToggle';
+import request from '@/services/request';
+import useAppStore from '@/stores/app';
+import { useConfigStore } from '@/stores/config';
+import useSessionStore from '@/stores/session';
+import type { ApiResp, TApp, WindowSize } from '@/types';
+import download from '@/utils/downloadFIle';
+import { formatMoney } from '@/utils/format';
 
 export default function DesktopContent(props: any) {
   const { t, i18n } = useTranslation();
   const { installedApps: apps, runningInfo, openApp, setToHighestLayerById } = useAppStore();
-  const backgroundImage = useConfigStore().layoutConfig?.backgroundImage;
   const logo = useConfigStore().layoutConfig?.logo;
   const renderApps = apps.filter((item: TApp) => item?.displayType === 'normal');
-  const [maxItems, setMaxItems] = useState(10);
   const { message } = useMessage();
 
   const handleDoubleClick = (e: MouseEvent<HTMLButtonElement>, item: TApp) => {
     e.preventDefault();
     if (item?.name) {
-      console.log(item);
       openApp(item);
     }
   };
@@ -150,7 +148,6 @@ export default function DesktopContent(props: any) {
    */
   const [showId, setShowId] = useState(true);
   const passwordEnabled = useConfigStore().authConfig?.idp?.password?.enabled;
-  const rechargeEnabled = useConfigStore().commonConfig?.rechargeEnabled;
   const installApp = useAppStore(s => s.installedApps);
 
   const router = useRouter();
@@ -174,6 +171,13 @@ export default function DesktopContent(props: any) {
   const queryclient = useQueryClient();
   const kubeconfig = session?.kubeconfig || '';
 
+  /**
+   * Notification
+   */
+  const showDisclosure = useDisclosure();
+  const [notificationAmount, setNotificationAmount] = useState(0);
+  const onAmount = useCallback((amount: number) => setNotificationAmount(amount), []);
+
   return (
     <Flex h="100vh" bg="gray.100">
       <Box
@@ -188,7 +192,7 @@ export default function DesktopContent(props: any) {
         <HStack justifyContent="space-between" w="100%" p={4}>
           {isSidebarOpen && (
             <HStack>
-              <Image src="/logo.svg" alt="Logo" h="36px" />
+              <Image src={logo} alt="Logo" h="36px" />
               {isSidebarOpen && <Heading size="md">{layoutConfig?.title || 'Sealos Cloud'}</Heading>}
             </HStack>
           )}
@@ -256,6 +260,7 @@ export default function DesktopContent(props: any) {
                         <Text fontSize="md">{t('Manage Team')}</Text>
                       </Button>
                     </TeamCenter>
+
                     <Button
                       w="100%"
                       justifyContent="flex-start"
@@ -265,15 +270,12 @@ export default function DesktopContent(props: any) {
                         const costcenter = installApp.find(t => t.key === 'system-costcenter');
                         if (!costcenter)
                           return;
-                        openApp(costcenter, {
-                          query: {
-                            openRecharge: 'true',
-                          },
-                        });
+                        openApp(costcenter);
                       }}
                     >
                       <Text fontSize="md">{`${t('Balance')}: ${formatMoney(balance).toFixed(2)}`}</Text>
                     </Button>
+
                     <Button
                       w="100%"
                       justifyContent="flex-start"
@@ -283,11 +285,15 @@ export default function DesktopContent(props: any) {
                     >
                       <Text fontSize="md">kubeconfig</Text>
                     </Button>
-                    <PasswordModify>
-                      <Button w="100%" justifyContent="flex-start" variant="ghost" leftIcon={<FaKey />}>
-                        <Text fontSize="md">{t('changePassword')}</Text>
-                      </Button>
-                    </PasswordModify>
+
+                    {passwordEnabled && (
+                      <PasswordModify>
+                        <Button w="100%" justifyContent="flex-start" variant="ghost" leftIcon={<FaKey />}>
+                          <Text fontSize="md">{t('changePassword')}</Text>
+                        </Button>
+                      </PasswordModify>
+                    )}
+
                     <Button
                       w="100%"
                       justifyContent="flex-start"
@@ -309,7 +315,14 @@ export default function DesktopContent(props: any) {
                       <Button variant="ghost">
                         <LangSelectSimple />
                       </Button>
-                      <IconButton icon={<FaBell />} variant="ghost" aria-label={t('Notification')} />
+                      <IconButton
+                        icon={<FaBell />}
+                        variant="ghost"
+                        aria-label={t('Notification')}
+                        onClick={() => showDisclosure.onOpen()}
+                      >
+                        <Notification disclosure={showDisclosure} onAmount={onAmount} />
+                      </IconButton>
                     </HStack>
                   </VStack>
                 </PopoverBody>
