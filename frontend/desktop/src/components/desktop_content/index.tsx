@@ -57,8 +57,7 @@ export default function DesktopContent(props: any) {
   const handleDoubleClick = (e: MouseEvent<HTMLButtonElement>, item: TApp) => {
     e.preventDefault();
     if (item?.name) {
-
-      console.log(item)
+      console.log(item);
       openApp(item);
     }
   };
@@ -176,12 +175,14 @@ export default function DesktopContent(props: any) {
   /**
    * Notification
    */
-  const showDisclosure = useDisclosure();
+  const showNotification = useDisclosure();
   const [notificationAmount, setNotificationAmount] = useState(0);
   const onAmount = useCallback((amount: number) => setNotificationAmount(amount), []);
 
   return (
     <Flex h="100vh" bg="gray.100">
+      <Notification disclosure={showNotification} onAmount={onAmount} />
+
       <Box
         w={isSidebarOpen ? '250px' : '60px'}
         bg="white"
@@ -321,10 +322,8 @@ export default function DesktopContent(props: any) {
                         icon={<FaBell />}
                         variant="ghost"
                         aria-label={t('Notification')}
-                        onClick={() => showDisclosure.onOpen()}
-                      >
-                        <Notification disclosure={showDisclosure} onAmount={onAmount} />
-                      </IconButton>
+                        onClick={() => showNotification.onOpen()}
+                      />
                     </HStack>
                   </VStack>
                 </PopoverBody>
