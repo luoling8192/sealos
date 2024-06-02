@@ -57,6 +57,8 @@ export default function DesktopContent(props: any) {
   const handleDoubleClick = (e: MouseEvent<HTMLButtonElement>, item: TApp) => {
     e.preventDefault();
     if (item?.name) {
+
+      console.log(item)
       openApp(item);
     }
   };
@@ -210,15 +212,15 @@ export default function DesktopContent(props: any) {
             mt={2}
             w="100%"
           >
-            {renderApps.map(app => (
+            {renderApps.map((app, index) => (
               isSidebarOpen
                 ? (
                   <Button
                     w="100%"
                     justifyContent="flex-start"
                     variant="ghost"
-                    key={app.key}
-                    leftIcon={<Image src={app?.icon || '/logo.svg'} draggable={false} width="1.5rem" height="1.5rem" />}
+                    key={`menu-item-${app.key}-${index}`}
+                    leftIcon={<Image src={app?.icon || logo} draggable={false} width="1.5rem" height="1.5rem" />}
                     onClick={e => handleDoubleClick(e, app)}
                   >
                     <Text fontSize="md" isTruncated maxW="180px">
@@ -232,9 +234,9 @@ export default function DesktopContent(props: any) {
                   <IconButton
                     w="100%"
                     variant="ghost"
-                    key={app.key}
                     aria-label={app.name}
-                    icon={<Image src={app?.icon || '/logo.svg'} draggable={false} width="24px" height="24px" />}
+                    key={`menu-collapse-${app.key}-${index}`}
+                    icon={<Image src={app?.icon || logo} draggable={false} width="24px" height="24px" />}
                     onClick={e => handleDoubleClick(e, app)}
                   />
                   )
