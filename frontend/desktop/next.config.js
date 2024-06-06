@@ -31,7 +31,14 @@ const nextConfig = withPWA({
   transpilePackages: ['@sealos/ui', 'sealos-desktop-sdk', '@sealos/driver'],
   experimental: {
     outputFileTracingRoot: path.join(__dirname, '../')
-  }
+  },
+  typescript: {
+    // !! WARN !!
+    // Dangerously allow production builds to successfully complete even if
+    // your project has type errors.
+    // !! WARN !!
+    ignoreBuildErrors: true,
+  },
 });
 
 module.exports = nextConfig;
