@@ -20,6 +20,6 @@ spec:
     limits:
       cpu: 1000m
       memory: 2Gi
-  tlsEnabled: true
+  tlsEnabled: false
   cockroachDBVersion: v23.1.11
   nodes: 3

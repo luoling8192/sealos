@@ -6,6 +6,7 @@ set -e
 CLOUD_DIR="/root/.sealos/cloud"
 SEALOS_VERSION="v5.0.0-beta5"
 cloud_version="latest"
+fst_image="docker.io/luoling8192/fst-cloud:latest"
 #mongodb_version="mongodb-5.0"
 #master_ips=
 #node_ips=
@@ -258,7 +259,10 @@ init() {
     pull_image "cockroach" "latest"
     pull_image "metrics-server" "v${metrics_server_version#v:-0.6.4}"
     pull_image "victoria-metrics-k8s-stack" "v${victoria_metrics_k8s_stack_version#v:-1.96.0}"
-    pull_image "sealos-cloud" "${cloud_version}"
+    # pull_image "sealos-cloud" "${cloud_version}"
+
+    get_prompt "pull_image" y && echo "fst-cloud (Modify by luoling8192)"
+    sealos pull -q "${fst_image}" >/dev/null
 }
 
 pull_image() {
@@ -348,7 +352,7 @@ metadata:
   name: secret
 spec:
   path: manifests/tls-secret.yaml
-  match: ${image_registry}/${image_repository}/sealos-cloud:${cloud_version}
+  match: ${fst_image}
   strategy: merge
   data: |
     data:
@@ -578,13 +582,13 @@ EOF
 
     setMongoVersion
     if [[ -n "$tls_crt_base64" ]] || [[ -n "$tls_key_base64" ]]; then
-        sealos run ${image_registry}/${image_repository}/sealos-cloud:${cloud_version}\
+        sealos run ${fst_image}\
         --env cloudDomain="$cloud_domain"\
         --env cloudPort="${cloud_port:-443}"\
         --env mongodbVersion="${mongodb_version:-mongodb-5.0}"\
         --config-file $CLOUD_DIR/tls-secret.yaml
     else
-        sealos run ${image_registry}/${image_repository}/sealos-cloud:${cloud_version}\
+        sealos run ${fst_image}\
         --env cloudDomain="$cloud_domain"\
         --env cloudPort="${cloud_port:-443}"\
         --env mongodbVersion="${mongodb_version:-mongodb-5.0}"
