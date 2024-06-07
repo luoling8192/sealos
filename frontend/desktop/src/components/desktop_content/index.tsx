@@ -207,7 +207,7 @@ export default function DesktopContent(props: any) {
           />
         </HStack>
 
-        <Box overflowY="auto" overflowX="hidden" w="100%" px={4} pb={4} mr={-4}>
+        <Box overflowY="auto" overflowX="hidden" w="100%" flexGrow={1} px={4} pb={4} mr={-4}>
           <VStack
             spacing={1}
             mt={2}
