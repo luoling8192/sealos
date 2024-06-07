@@ -31,7 +31,7 @@ retryPullImage ghcr.io/labring/sealos-cloud-resources-controller:latest
 retryPullImage ghcr.io/labring/sealos-cloud-account-controller:latest
 retryPullImage ghcr.io/labring/sealos-cloud-license-controller:latest
 
-retryPullImage docker.io/luoling8192/fst-desktop:latest
+retryPullImage docker.io/luoling8192/fst-cloud-desktop:latest
 retryPullImage ghcr.io/labring/sealos-cloud-terminal-frontend:latest
 retryPullImage ghcr.io/labring/sealos-cloud-applaunchpad-frontend:latest
 retryPullImage ghcr.io/labring/sealos-cloud-dbprovider-frontend:latest
@@ -53,7 +53,7 @@ sealos save -o tars/monitoring.tar ghcr.io/labring/sealos-cloud-resources-contro
 sealos save -o tars/account.tar ghcr.io/labring/sealos-cloud-account-controller:latest
 sealos save -o tars/license.tar ghcr.io/labring/sealos-cloud-license-controller:latest
 
-sealos save -o tars/frontend-desktop.tar  docker.io/luoling8192/fst-desktop:latest
+sealos save -o tars/frontend-desktop.tar  docker.io/luoling8192/fst-cloud-desktop:latest
 sealos save -o tars/frontend-terminal.tar  ghcr.io/labring/sealos-cloud-terminal-frontend:latest
 sealos save -o tars/frontend-dbprovider.tar ghcr.io/labring/sealos-cloud-dbprovider-frontend:latest
 sealos save -o tars/frontend-costcenter.tar ghcr.io/labring/sealos-cloud-costcenter-frontend:latest
