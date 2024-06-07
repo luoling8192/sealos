@@ -113,9 +113,6 @@ export default function DesktopContent(props: any) {
   }, []);
 
   useEffect(() => {
-    console.log(runningInfo);
-    
-
     return masterApp?.addEventListen('openDesktopApp', openDesktopApp);
   }, [openDesktopApp]);
 

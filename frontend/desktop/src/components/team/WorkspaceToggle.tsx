@@ -72,6 +72,7 @@ export default function WorkspaceToggle() {
         onClick={() => disclosure.onOpen()}
       >
         <Text>
+          qwq
           {namespace?.nstype === NSType.Private ? t('Default Team') : namespace?.teamName}
         </Text>
         <ExchangeIcon />
@@ -94,7 +95,7 @@ export default function WorkspaceToggle() {
                 bg="rgba(255, 255, 255, 0.8)"
                 boxShadow="0px 1px 2px rgba(0, 0, 0, 0.2)"
                 position="absolute"
-                top="43px"
+                bottom="43px"
                 right={0}
                 left={0}
                 cursor="initial"
