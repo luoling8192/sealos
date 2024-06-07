@@ -49,7 +49,7 @@ import { formatMoney } from '@/utils/format';
 
 export default function DesktopContent(props: any) {
   const { t, i18n } = useTranslation();
-  const { installedApps: apps, runningInfo, openApp, setToHighestLayerById } = useAppStore();
+  const { installedApps: apps, runningInfo, openApp, setToHighestLayerById, currentAppPid } = useAppStore();
   const logo = useConfigStore().layoutConfig?.logo;
   const renderApps = apps.filter((item: TApp) => item?.displayType === 'normal');
   const { message } = useMessage();
@@ -57,7 +57,6 @@ export default function DesktopContent(props: any) {
   const handleDoubleClick = (e: MouseEvent<HTMLButtonElement>, item: TApp) => {
     e.preventDefault();
     if (item?.name) {
-      console.log(item);
       openApp(item);
     }
   };
@@ -114,6 +113,9 @@ export default function DesktopContent(props: any) {
   }, []);
 
   useEffect(() => {
+    console.log(runningInfo);
+    
+
     return masterApp?.addEventListen('openDesktopApp', openDesktopApp);
   }, [openDesktopApp]);
 
@@ -337,7 +339,7 @@ export default function DesktopContent(props: any) {
       </Box>
 
       <Box flex="1">
-        {runningInfo.length > 0 && <IframeWindow pid={runningInfo[runningInfo.length - 1].pid} />}
+        {runningInfo.length > 0 && <IframeWindow pid={currentAppPid} />}
       </Box>
     </Flex>
   );
