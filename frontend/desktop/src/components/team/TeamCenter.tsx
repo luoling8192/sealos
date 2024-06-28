@@ -102,17 +102,30 @@ export default function TeamCenter(props: StackProps) {
       setNsid(defaultNamespace.id);
     }
   }, [_namespaces, ns_uid]);
+
   return (
     <>
-      <Box
-        width="100%"
+      <HStack
+        gap={'8px'}
+        alignItems={'center'}
+        p={'6px 4px'}
+        cursor={'pointer'}
+        borderRadius={'4px'}
         onClick={() => {
           setMessageFilter([]);
           onOpen();
         }}
+        {...props}
+        _hover={{
+          bgColor: 'rgba(0, 0, 0, 0.03)'
+        }}
+        pb={'10px'}
+        borderBottom={'1px solid rgba(0, 0, 0, 0.05)'}
+        mb={'4px'}
       >
-        {props.children}
-      </Box>
+        <SettingIcon boxSize={'16px'} color={'white'} />
+        <Text>{t('Manage Team')}</Text>
+      </HStack>
 
       <Modal isOpen={isOpen} onClose={onClose} isCentered closeOnOverlayClick={false}>
         <ModalOverlay />
@@ -153,36 +166,35 @@ export default function TeamCenter(props: StackProps) {
                 </Text>
                 <CreateTeam />
               </Flex>
-              <Box overflow="scroll" h="0" flex="1" px="16px">
-                {namespaces && namespaces.length > 0
-                  ? (
-                      namespaces.map((ns) => {
-                        return (
-                          <NsListItem
-                            key={ns.uid}
-                            width="full"
-                            onClick={() => {
-                              setNs_uid(ns.uid);
-                              setNsid(ns.id);
-                            }}
-                            p="7.5px 9px"
-                            fontSize="14px"
-                            displayPoint={false}
-                            id={ns.uid}
-                            isPrivate={ns.nstype === NSType.Private}
-                            isSelected={ns.uid === ns_uid}
-                            teamName={ns.teamName}
-                          />
-                        );
-                      })
-                    )
-                  : (
-                    <Center w="full" h="full">
-                      <Text color="grayModern.600" fontSize="12px">
-                        {t('noWorkspaceCreated')}
-                      </Text>
-                    </Center>
-                    )}
+              <Box overflow={'scroll'} h="0" flex="1" px="16px">
+                {namespaces && namespaces.length > 0 ? (
+                  namespaces.map((ns) => {
+                    return (
+                      <NsListItem
+                        key={ns.uid}
+                        width={'full'}
+                        onClick={() => {
+                          setNs_uid(ns.uid);
+                          setNsid(ns.id);
+                        }}
+                        p={'7.5px 9px'}
+                        fontSize={'14px'}
+                        displayPoint={false}
+                        id={ns.uid}
+                        isPrivate={ns.nstype === NSType.Private}
+                        isSelected={ns.uid === ns_uid}
+                        teamName={ns.teamName}
+                        selectedColor="#0884DD"
+                      />
+                    );
+                  })
+                ) : (
+                  <Center w="full" h="full">
+                    <Text color={'grayModern.600'} fontSize={'12px'}>
+                      {t('noWorkspaceCreated')}
+                    </Text>
+                  </Center>
+                )}
               </Box>
             </Stack>
             <VStack

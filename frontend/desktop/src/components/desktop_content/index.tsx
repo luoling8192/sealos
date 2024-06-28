@@ -17,6 +17,15 @@ import {
 } from '@chakra-ui/react';
 import { useMessage } from '@sealos/ui';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { getGlobalNotification } from '@/api/platform';
+import AppWindow from '@/components/app_window';
+// import useDriver from '@/hooks/useDriver';
+import useAppStore from '@/stores/app';
+import { useConfigStore } from '@/stores/config';
+import { TApp, WindowSize } from '@/types';
+import { Box, Center, Flex, Text } from '@chakra-ui/react';
+import { WarnTriangleIcon, useMessage } from '@sealos/ui';
+import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import type { MouseEvent } from 'react';
@@ -32,6 +41,11 @@ import {
   FaWallet,
 } from 'react-icons/fa';
 import { createMasterAPP, masterApp } from 'sealos-desktop-sdk/master';
+import Cost from '../account/cost';
+import TriggerAccountModule from '../account/trigger';
+import { ChakraIndicator } from './ChakraIndicator';
+import Apps from './apps';
+import Assistant from './assistant';
 import IframeWindow from './iframe_window';
 import { getGlobalNotification } from '@/api/platform';
 import LangSelectSimple from '@/components/LangSelect/simple';
@@ -47,12 +61,24 @@ import type { ApiResp, TApp, WindowSize } from '@/types';
 import download from '@/utils/downloadFIle';
 import { formatMoney } from '@/utils/format';
 
-export default function DesktopContent(props: any) {
+const AppDock = dynamic(() => import('../AppDock'), { ssr: false });
+const FloatButton = dynamic(() => import('@/components/floating_button'), { ssr: false });
+const Account = dynamic(() => import('../account'), { ssr: false });
+
+export const blurBackgroundStyles = {
+  bg: 'rgba(22, 30, 40, 0.35)',
+  backdropFilter: 'blur(80px) saturate(150%)',
+  border: 'none',
+  borderRadius: '12px'
+};
+
+export default function Desktop(props: any) {
   const { t, i18n } = useTranslation();
   const { installedApps: apps, runningInfo, openApp, setToHighestLayerById, currentAppPid } = useAppStore();
   const logo = useConfigStore().layoutConfig?.logo;
   const renderApps = apps.filter((item: TApp) => item?.displayType === 'normal');
   const { message } = useMessage();
+  const [showAccount, setShowAccount] = useState(false);
 
   const handleDoubleClick = (e: MouseEvent<HTMLButtonElement>, item: TApp) => {
     e.preventDefault();
@@ -229,7 +255,7 @@ export default function DesktopContent(props: any) {
                         : t(app?.name)}
                     </Text>
                   </Button>
-                  )
+                )
                 : (
                   <IconButton
                     w="100%"
@@ -239,7 +265,7 @@ export default function DesktopContent(props: any) {
                     icon={<Image src={app?.icon || logo} draggable={false} width="24px" height="24px" />}
                     onClick={e => handleDoubleClick(e, app)}
                   />
-                  )
+                )
             ))}
           </VStack>
         </Box>

@@ -10,8 +10,7 @@ export default function LangSelectSimple(props: FlexProps) {
 
   return (
     <Flex
-      userSelect="none"
-      ml="auto"
+      userSelect={'none'}
       w="32px"
       h="32px"
       borderRadius="50%"
