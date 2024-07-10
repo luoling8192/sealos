@@ -14,13 +14,13 @@ database:
   regionalCockroachdbURI: "thisisregionalcockroachdburi"
 desktop:
   layout:
-    title: "Sealos Cloud"
+    title: "GG.st"
     logo: "/logo.png"
     backgroundImage: "/images/bg-blue.svg"
     meta:
-      title: "Sealos Cloud"
-      description: "Sealos Cloud"
-      keywords: "Sealos Cloud"
+      title: "GG.st | Deploy your Apps Globally"
+      description: "Deploy your Apps Globally"
+      keywords: "GG.st"
       scripts: []
     common:
       githubStarEnabled: "false"
