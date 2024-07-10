@@ -72,7 +72,6 @@ export default function WorkspaceToggle() {
         onClick={() => disclosure.onOpen()}
       >
         <Text>
-          qwq
           {namespace?.nstype === NSType.Private ? t('Default Team') : namespace?.teamName}
         </Text>
         <ExchangeIcon />
